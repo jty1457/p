@@ -4,7 +4,7 @@ FROM python:3.9-slim
 # Set environment variables (using key=value format)
 ENV PYTHONUNBUFFERED=True
 ENV APP_HOME=/app
-WORKDIR $APP_HOME # WORKDIR은 이전 ENV에서 설정된 APP_HOME 변수를 사용합니다.
+WORKDIR $APP_HOME 
 
 # Install FFMPEG and other dependencies
 RUN apt-get update && \
