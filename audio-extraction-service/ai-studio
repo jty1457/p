@@ -1,10 +1,10 @@
 # Use an official Python runtime as a parent image
 FROM python:3.9-slim
 
-# Set environment variables (using key=value format)
-ENV PYTHONUNBUFFERED=True
-ENV APP_HOME=/app
-WORKDIR $APP_HOME 
+# Set environment variables
+ENV PYTHONUNBUFFERED True
+ENV APP_HOME /app
+WORKDIR $APP_HOME
 
 # Install FFMPEG and other dependencies
 RUN apt-get update && \
@@ -19,10 +19,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the local Flask app to the container
 COPY app.py .
 
-# Run the Flask app using Gunicorn (JSON exec form for CMD)
+# Run the Flask app using Gunicorn (or Flask dev server for local testing)
 # Gunicorn is a WSGI HTTP server for UNIX, commonly used for running Python web apps.
 # For Cloud Run, Gunicorn is a good choice. The PORT environment variable is set by Cloud Run.
-# CMD ["executable", "param1", "param2"] (JSON array form)
-# sh -c 를 사용하여 $PORT 환경 변수 확장을 허용하고,
-# exec 를 사용하여 gunicorn이 셸 프로세스를 대체하도록 합니다.
-CMD ["sh", "-c", "exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app"]
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
